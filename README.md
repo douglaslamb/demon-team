@@ -21,16 +21,26 @@ Both players use one keyboard. Kill all the demons. Your health falls by itself 
 Black:
 
 a - left 
+
 d - right 
+
 w - up 
+
 s - down 
+
 v + (a or d or w or s) - shoot in that direction 
 
+
 White: 
+
 left - left 
+
 right - right 
+
 up - up 
+
 down - down 
+
 rshift + (left or right or up or down) - shoot in that direction
 
 ## Attributions
