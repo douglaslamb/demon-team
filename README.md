@@ -19,6 +19,7 @@ Or download the exectuables:
 Both players use one keyboard. Kill all the demons. Your health falls by itself at a constant rate. The demons drop health when they die. If one player dies you both lose. You cannot shoot and move at the same time.
 
 Black:
+
 a - left 
 d - right 
 w - up 
