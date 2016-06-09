@@ -1,5 +1,6 @@
 # Demon Team
 
+
 ![Demon Team image](http://douglaslamb.com/public/demon-team-20151223.jpg)
 
 Demon Team is a two-player coop game wherein you and a friend shoot demons. It was written in Lua using the Löve framework https://love2d.org .
