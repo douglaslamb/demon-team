@@ -5,8 +5,8 @@ local vector = require 'vector'
 local Player = class('Player')
 
 function Player:initialize(x, y, r, g, b, playerTag, bulletArray, shootSound)
-  self.width = (love.graphics.getWidth() / 16) * 0.75
-  self.height = (love.graphics.getHeight() / 16) * 0.75
+  self.width = (love.graphics.getWidth() / boardSize) * 0.75
+  self.height = (love.graphics.getHeight() / boardSize) * 0.75
   self.tag = playerTag --so the player can tag their own bullets so we know who bullets belong to
   self.shape = HC.rectangle(x - self.width * 0.5 , y - self.height * 0.5 , self.width, self.height)
   self.shape.tag = self.tag
@@ -16,7 +16,7 @@ function Player:initialize(x, y, r, g, b, playerTag, bulletArray, shootSound)
   self.b = b
   self.bullets = bulletArray
   self.speed = 200
-  self.health = 100
+  self.health = maxHealth
   self.shootSound = shootSound
 end
 
@@ -36,7 +36,7 @@ end
 
 function Player:draw()
   if self.health < 0 then self.health = 0 end
-  if self.health > 100 then self.health = 100 end
+  if self.health > maxHealth then self.health = maxHealth end
   drawX, drawY = self.shape:center()
   drawX = drawX - self.width * 0.5
   drawY = drawY - self.height * 0.5

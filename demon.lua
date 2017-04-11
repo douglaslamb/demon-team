@@ -5,8 +5,8 @@ local vector = require 'vector'
 local Demon = class('Demon')
 
 function Demon:initialize(x, y, r, g, b, playerOne, playerTwo, gotHitSound, roamSound, dieSound)
-  self.width = (love.graphics.getWidth() / 16) * 0.75
-  self.height = (love.graphics.getHeight() / 16) * 0.75
+  self.width = (love.graphics.getWidth() / boardSize) * 0.75
+  self.height = (love.graphics.getHeight() / boardSize) * 0.75
   angle = love.math.random() * math.pi * 2
   dirX = math.cos(angle) 
   dirY = math.sin(angle)
@@ -63,6 +63,8 @@ function Demon:update(dt)
   makeRoamSound = love.math.random(0, 10000)
   if makeRoamSound < 1 then
     --self.roamSound:play()
+    --leaving out roam sounds for now
+    --they communicate nothing to the player
   end
   if self.sayingOuch then
     self.r = self.oldR

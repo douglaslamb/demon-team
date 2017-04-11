@@ -10,6 +10,12 @@ function init()
   loseHealthInterval = 5
   loseHealthAmt = 10
   loseHealthTimer = love.timer.getTime() + loseHealthInterval
+  boardSize = 16
+  maxHealth = 100
+  medKitAmt = 10
+  bulletDamageAmt = 10
+  demonDamageAmt = 1
+  screenEdgeSize = 10
   love.graphics.setFont(love.graphics.newFont(20))
   love.window.setMode(800, 800)
   HC.resetHash()
@@ -20,13 +26,13 @@ function init()
   healthArray = {}
   local demonAmt = 35
 
-  leftScreenEdge = HC.rectangle(-10, 0, 10, love.graphics.getHeight())
+  leftScreenEdge = HC.rectangle(-1 * screenEdgeSize, 0, screenEdgeSize, love.graphics.getHeight())
   leftScreenEdge.tag = "edge"
-  rightScreenEdge = HC.rectangle(love.graphics.getWidth(), 0, 10, love.graphics.getHeight())
+  rightScreenEdge = HC.rectangle(love.graphics.getWidth(), 0, screenEdgeSize, love.graphics.getHeight())
   rightScreenEdge.tag = "edge"
-  topScreenEdge = HC.rectangle(0, -10, love.graphics.getWidth(), 10)
+  topScreenEdge = HC.rectangle(0, -1 * screenEdgeSize, love.graphics.getWidth(), screenEdgeSize)
   topScreenEdge.tag = "edge"
-  bottomScreenEdge = HC.rectangle(0, love.graphics.getHeight(), love.graphics.getWidth(), 10)
+  bottomScreenEdge = HC.rectangle(0, love.graphics.getHeight(), love.graphics.getWidth(), screenEdgeSize)
   bottomScreenEdge.tag = "edge"
 
   --init sounds
@@ -56,11 +62,11 @@ function init()
   end
 
   --fill map array with players
-  local playerOneI = love.math.random(1, 16)
-  local playerOneJ = love.math.random(1, 16)
+  local playerOneI = love.math.random(1, boardSize)
+  local playerOneJ = love.math.random(1, boardSize)
   while tileArray[playerOneI][playerOneJ] ~= 0 do
-    playerOneI = love.math.random(1, 16)
-    playerOneJ = love.math.random(1, 16)
+    playerOneI = love.math.random(1, boardSize)
+    playerOneJ = love.math.random(1, boardSize)
   end
   local playerOneNumber = love.math.random(2, 3)
   local playerTwoNumber = 5 - playerOneNumber
@@ -68,22 +74,22 @@ function init()
   --2 means playerOne, 3 means playerTwo , 4 means demon
   if playerOneJ ~= 1 and tileArray[playerOneI][playerOneJ - 1] == 0 then
     tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  elseif playerOneJ ~= 16 and tileArray[playerOneI][playerOneJ + 1] == 0 then
+  elseif playerOneJ ~= boardSize and tileArray[playerOneI][playerOneJ + 1] == 0 then
     tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
   elseif playerOneI ~= 1 and tileArray[playerOneI - 1][playerOneJ] == 0 then
     tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  elseif playerOneI ~= 16 and tileArray[playerOneI + 1][playerOneJ] == 0 then
+  elseif playerOneI ~= boardSize and tileArray[playerOneI + 1][playerOneJ] == 0 then
     tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
   end 
 
   --fill map array w demons
 
   for i=1, demonAmt do
-    demonI = love.math.random(1, 16)
-    demonJ = love.math.random(1, 16)
+    demonI = love.math.random(1, boardSize)
+    demonJ = love.math.random(1, boardSize)
     while tileArray[demonI][demonJ] ~= 0 do
-      demonI = love.math.random(1, 16)
-      demonJ = love.math.random(1, 16)
+      demonI = love.math.random(1, boardSize)
+      demonJ = love.math.random(1, boardSize)
     end
     tileArray[demonI][demonJ] = 4
   end
@@ -122,9 +128,9 @@ end
 function createMapArray()
   local tileArray = {}
   numberOfSpaces = 0
-  for i=1, 16 do
+  for i=1, boardSize do
     tileArray[i] = {}
-    for j=1, 16 do
+    for j=1, boardSize do
       if love.math.random(-5, 1) > 0 then
         tileArray[i][j] = 1
       else
@@ -152,13 +158,13 @@ function isArrayContiguous(inArray)
     if (not (j == 1)) and testArray[i][j - 1] == 0 then
       fill(i, j - 1)
     end
-    if (not (j == 16)) and testArray[i][j + 1] == 0 then
+    if (not (j == boardSize)) and testArray[i][j + 1] == 0 then
       fill(i, j + 1)
     end
     if (not (i == 1)) and testArray[i - 1][j] == 0 then
       fill(i - 1, j)
     end
-    if (not (i == 16)) and testArray[i + 1][j] == 0 then
+    if (not (i == boardSize)) and testArray[i + 1][j] == 0 then
       fill(i + 1, j)
     end
   end
@@ -346,12 +352,12 @@ function handleCollisions(dt)
   for shape, delta in pairs(HC.collisions(playerOne:getShape())) do
     if shape.tag == "wall" then
       playerOne:getShape():move(delta.x, delta.y)
-    elseif shape.tag == "health" and playerOne.health < 100 then
-      playerOne.health = playerOne.health + 10
+    elseif shape.tag == "health" and playerOne.health < maxHealth then
+      playerOne.health = playerOne.health + medKitAmt
       getHealthSound:play()
       shape.dead = true
     elseif shape.tag == "bulletplayerTwo" then
-      playerOne.health = playerOne.health - 10
+      playerOne.health = playerOne.health - bulletDamageAmt
       playerGotHurtSound:play()
       shape.container.dead = true
       HC.remove(shape)
@@ -361,12 +367,12 @@ function handleCollisions(dt)
   for shape, delta in pairs(HC.collisions(playerTwo:getShape())) do
     if shape.tag == "wall" then
       playerTwo:getShape():move(delta.x, delta.y)
-    elseif shape.tag == "health" and playerTwo.health < 100 then
-      playerTwo.health = playerTwo.health + 10
+    elseif shape.tag == "health" and playerTwo.health < maxHealth then
+      playerTwo.health = playerTwo.health + medKitAmt
       getHealthSound:play()
       shape.dead = true
     elseif shape.tag == "bulletplayerOne" then
-      playerTwo.health = playerTwo.health - 10
+      playerTwo.health = playerTwo.health - bulletDamageAmt
       playerGotHurtSound:play()
       shape.container.dead = true
       HC.remove(shape)
@@ -380,12 +386,12 @@ function handleCollisions(dt)
       if shape.tag == "playerOne" then
         v:getShape():move(delta.x, delta.y)
         shape:move(-delta.x, -delta.y)
-        playerOne.health = playerOne.health - 1
+        playerOne.health = playerOne.health - demonDamageAmt
         playerGotHurtSound:play()
       elseif shape.tag == "playerTwo" then
         v:getShape():move(delta.x, delta.y)
         shape:move(-delta.x, -delta.y)
-        playerTwo.health = playerTwo.health - 1
+        playerTwo.health = playerTwo.health - demonDamageAmt
         playerGotHurtSound:play()
       elseif shape.tag == "demon" then
         v:getShape():move(delta.x, delta.y)
