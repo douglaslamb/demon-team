@@ -7,7 +7,7 @@ local Player = class('Player')
 function Player:initialize(x, y, r, g, b, playerTag, bulletArray, shootSound)
   self.width = (love.graphics.getWidth() / 16) * 0.75
   self.height = (love.graphics.getHeight() / 16) * 0.75
-  self.tag = playerTag --this is mostly so the player can tag his or her own bullets
+  self.tag = playerTag --so the player can tag their own bullets so we know who bullets belong to
   self.shape = HC.rectangle(x - self.width * 0.5 , y - self.height * 0.5 , self.width, self.height)
   self.shape.tag = self.tag
   self.shape.container = self

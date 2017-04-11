@@ -51,38 +51,6 @@ function Demon:checkIntersect(l1p1, l1p2, l2p1, l2p2)
   return (checkDir(l1p1,l1p2,l2p1) ~= checkDir(l1p1,l1p2,l2p2)) and (checkDir(l2p1,l2p2,l1p1) ~= checkDir(l2p1,l2p2,l1p2))
 end
 
-function Demon:testSight(player)
-  local selfX, selfY = self.shape:center()
-  local playerX, playerY = player.shape:center()
-  doYouSee = true
-  for v in pairs(HC.hash():shapes()) do
-    if v.tag == "wall" then
-      x1, y1, x2, y2 = v:bbox()
-      if self:checkIntersect({x=selfX, y=selfY}, {x=playerX, y=playerY}, {x=x1, y=y1}, {x=x1, y=y2}) then
-        doYouSee = false
-      end
-      if self:checkIntersect({x=selfX, y=selfY}, {x=playerX, y=playerY}, {x=x1, y=y1}, {x=x2, y=y1}) then
-        doYouSee = false
-      end
-      if self:checkIntersect({x=selfX, y=selfY}, {x=playerX, y=playerY}, {x=x2, y=y2}, {x=x1, y=y2}) then
-        doYouSee = false
-      end
-      if self:checkIntersect({x=selfX, y=selfY}, {x=playerX, y=playerY}, {x=x2, y=y2}, {x=x2, y=y1}) then
-        doYouSee = false
-      end
-    end
-    return doYouSee
-  end
-  --just check all of the fucking squares I guess
-
-  -- if I have a line on the player go after them and move a little faster
-  -- I guess I can see through other demons
-  -- reestablish line every couple of seconds
-  -- if I can't restablish line go to place I last saw player or try to.
-  -- if I don't see them for a while then wander
-  -- once I'm really close reestablish line every like one second or sooner you know
-end
-
 function Demon:update(dt)
   changeDir = love.math.random(0, 100)
   if changeDir < 1 then

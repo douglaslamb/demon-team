@@ -65,9 +65,7 @@ function init()
   local playerOneNumber = love.math.random(2, 3)
   local playerTwoNumber = 5 - playerOneNumber
   tileArray[playerOneI][playerOneJ] = playerOneNumber
-  --2 means playerOne, 3 means playerTwo , 4 means demon btw this is a litle fucked her
-  --I just wanted the guys to spawn in varied ways so I just switched them at random
-  --im an idiot
+  --2 means playerOne, 3 means playerTwo , 4 means demon
   if playerOneJ ~= 1 and tileArray[playerOneI][playerOneJ - 1] == 0 then
     tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
   elseif playerOneJ ~= 16 and tileArray[playerOneI][playerOneJ + 1] == 0 then
@@ -106,11 +104,8 @@ function init()
   
   map = Map:new(tileArray)
 
-  --playerOne = Player:new(30, 30, 40, 40, 40, "playerOne", bulletArray, playerShootSound)
   playerOneController = PlayerController:new(playerOne, 0.2, "w", "s", "a", "d", "v")
-  --playerTwo = Player:new(300, 300, 230, 230, 230, "playerTwo", bulletArray, playerShootSound)
   playerTwoController = PlayerController:new(playerTwo, 0.2, "up", "down", "left", "right", "rshift")
-  --demonArray[i] = Demon:new(400, 400, 200, 190, 1, playerOne, playerTwo, demonGotHitSound, demonRoamSounds[love.math.random(1, 3)], demonDieSound)
   for i, v in pairs(HC:hash():shapes()) do
     if v.tag == "playerOne" and v.container == nil then
       HC.remove(v)
@@ -301,7 +296,6 @@ function love.draw()
       demonCount = demonCount + 1
     end
   end
-  --love.graphics.print(playerOneCount .. "\n" .. playerTwoCount, 100, 100)
 end
 
 function handleCollisions(dt)
