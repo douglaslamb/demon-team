@@ -7,18 +7,26 @@ local Demon = require 'demon'
 local PlayerController = require 'playerController'
 
 function init()
+  love.graphics.setFont(love.graphics.newFont(20))
+  love.window.setMode(800, 800)
+
   loseHealthInterval = 5
   loseHealthAmt = 10
   loseHealthTimer = love.timer.getTime() + loseHealthInterval
   boardSize = 16
+  squareWidth = love.graphics.getWidth() / boardSize
   maxHealth = 100
   medKitAmt = 10
   bulletDamageAmt = 10
   demonDamageAmt = 1
   screenEdgeSize = 10
-  love.graphics.setFont(love.graphics.newFont(20))
-  love.window.setMode(800, 800)
   HC.resetHash()
+
+  playerOneColor = 40
+  playerTwoColor = 230 
+  demonRGB = {200, 190, 1}
+  backgroundRGB = {255, 200, 234}
+  wallRGB = {255, 200, 1}
 
   winText = ""
   gameOver = false
@@ -99,11 +107,11 @@ function init()
   for i, v in pairs(tileArray) do
     for j, u in pairs(tileArray[i]) do
       if u == 2 then
-        playerOne = Player:new((j - 1) * 50 + 25, (i - 1) * 50 + 25, 40, 40, 40, "playerOne", bulletArray, playerShootSound)
+        playerOne = Player:new((j - 1) * squareWidth + 25, (i - 1) * squareWidth + 25, playerOneColor, playerOneColor, playerOneColor, "playerOne", bulletArray, playerShootSound)
       elseif u == 3 then
-        playerTwo = Player:new((j - 1) * 50 + 25, (i - 1) * 50 + 25, 230, 230, 230, "playerTwo", bulletArray, playerShootSound)
+        playerTwo = Player:new((j - 1) * squareWidth + 25, (i - 1) * squareWidth + 25, playerTwoColor, playerTwoColor, playerTwoColor, "playerTwo", bulletArray, playerShootSound)
       elseif u == 4 then
-        table.insert(demonArray, Demon:new((j - 1) * 50 + 25, (i - 1) * 50 + 25, 200, 190, 1, playerOne, playerTwo, demonGotHitSound, demonRoamSounds[love.math.random(1, 3)], demonDieSound))
+        table.insert(demonArray, Demon:new((j - 1) * squareWidth + 25, (i - 1) * squareWidth + 25, demonRGB[1], demonRGB[2], demonRGB[3], playerOne, playerTwo, demonGotHitSound, demonRoamSounds[love.math.random(1, 3)], demonDieSound))
       end
     end
   end
@@ -274,8 +282,7 @@ end
 
 function love.draw()
   map:draw()
-  love.graphics.setBackgroundColor(255, 200, 234)
-  love.graphics.setColor(255, 200, 1, 255)
+  love.graphics.setBackgroundColor(backgroundRGB[1], backgroundRGB[2], backgroundRGB[3])
   for i, v in pairs(healthArray) do
     v:draw()
   end

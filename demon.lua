@@ -5,8 +5,8 @@ local vector = require 'vector'
 local Demon = class('Demon')
 
 function Demon:initialize(x, y, r, g, b, playerOne, playerTwo, gotHitSound, roamSound, dieSound)
-  self.width = (love.graphics.getWidth() / boardSize) * 0.75
-  self.height = (love.graphics.getHeight() / boardSize) * 0.75
+  self.width = squareWidth * 0.75
+  self.height = squareWidth * 0.75
   angle = love.math.random() * math.pi * 2
   dirX = math.cos(angle) 
   dirY = math.sin(angle)
