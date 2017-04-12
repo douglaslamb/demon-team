@@ -80,15 +80,23 @@ function init()
   local playerTwoNumber = 5 - playerOneNumber
   tileArray[playerOneI][playerOneJ] = playerOneNumber
   --2 means playerOne, 3 means playerTwo , 4 means demon
-  if playerOneJ ~= 1 and tileArray[playerOneI][playerOneJ - 1] == 0 then
-    tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  elseif playerOneJ ~= boardSize and tileArray[playerOneI][playerOneJ + 1] == 0 then
-    tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  elseif playerOneI ~= 1 and tileArray[playerOneI - 1][playerOneJ] == 0 then
-    tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  elseif playerOneI ~= boardSize and tileArray[playerOneI + 1][playerOneJ] == 0 then
-    tileArray[playerOneI][playerOneJ - 1] = playerTwoNumber
-  end 
+  --look one square left, up, right, and down of playerOne
+  --to determine where playerTwo goes
+  offsets = {}
+  table.insert(offsets, {0, -1})
+  table.insert(offsets, {0, 1})
+  table.insert(offsets, {-1, 0})
+  table.insert(offsets, {1, 0})
+
+  k = 1
+  playerTwoI = playerOneI + offsets[k][1]
+  playerTwoJ = playerOneJ + offsets[k][2]
+  while (not (playerTwoI >= 1 and playerTwoJ <= boardSize and tileArray[playerTwoI][playerTwoJ] == 0)) do 
+    k = k + 1
+    playerTwoI = playerOneI + offsets[k][1]
+    playerTwoJ = playerOneJ + offsets[k][2]
+  end
+  tileArray[playerTwoI][playerTwoJ] = playerTwoNumber
 
   --fill map array w demons
 
